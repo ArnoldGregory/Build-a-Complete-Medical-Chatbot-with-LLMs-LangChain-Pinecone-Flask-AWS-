@@ -68,9 +68,20 @@
 						},
 						type: "POST",
 						url: "/get",
+						beforeSend: function() {
+							// Show a Claude-style "thinking" typing indicator while the agent works
+							$("#messageFormeight").append(
+								'<div class="d-flex justify-content-start mb-4 thinking" id="thinkingIndicator"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer thinking-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div></div>'
+							);
+							$("#messageFormeight").scrollTop($("#messageFormeight")[0].scrollHeight);
+						}
 					}).done(function(data) {
+						$("#thinkingIndicator").remove();
 						var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + data + '<span class="msg_time">' + str_time + '</span></div></div>';
 						$("#messageFormeight").append($.parseHTML(botHtml));
+						$("#messageFormeight").scrollTop($("#messageFormeight")[0].scrollHeight);
+					}).fail(function() {
+						$("#thinkingIndicator").remove();
 					});
 					event.preventDefault();
 				});
